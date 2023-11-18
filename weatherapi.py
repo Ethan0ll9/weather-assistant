@@ -42,8 +42,8 @@ def get_data():
 
 def line_notify(data):
 
-    token = "UpN6oUxoHi8fOqmIAewqWtORIT8BWAYGtDtMUPnfABc" #1 on 1
-    #token = "Aeij5pKP8BGYkDIjwmhLxTVXocZlQ1Y2y8K0oh0c2X0" # group with mental
+    #token = "UpN6oUxoHi8fOqmIAewqWtORIT8BWAYGtDtMUPnfABc" #1 on 1
+    token = "Aeij5pKP8BGYkDIjwmhLxTVXocZlQ1Y2y8K0oh0c2X0" # group with mental
     message = ""
 
     if len(data) == 0:
