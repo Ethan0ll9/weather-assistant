@@ -3,11 +3,18 @@ import json
 
 def get_data():
 
+    # 中央氣象局台 api
+    # url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
+    # parameters = {
+    #     "Authorization" : "CWA-DC885251-6E8F-4B11-A21F-1F485D99EA13",
+    #     "locationName" : "臺北市"
+    # }
+
     # 中央氣象局台北市 api
-    url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
+    url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-061"
     parameters = {
         "Authorization" : "CWA-DC885251-6E8F-4B11-A21F-1F485D99EA13",
-        "locationName" : "臺北市"
+        "locationName" : "內湖區"
     }
 
     r = requests.get(url, params = parameters)
@@ -19,15 +26,15 @@ def get_data():
         
         data = json.loads(r.text)
 
-        location = data["records"]["location"][0]["locationName"]
-        weatherElement = data["records"]["location"][0]["weatherElement"]
+        location = data["records"]["locations"][0]["location"][0]["locationName"]
+        weatherElement = data["records"]["locations"][0]["location"][0]["weatherElement"]
         start_time = weatherElement[0]["time"][0]["startTime"]
         end_time = weatherElement[0]["time"][0]["endTime"]
-        weather_status = weatherElement[0]["time"][0]["parameter"]["parameterName"]
-        rain_prob = weatherElement[1]["time"][0]["parameter"]["parameterName"]
-        min_tem = weatherElement[2]["time"][0]["parameter"]["parameterName"]
-        con = weatherElement[3]["time"][0]["parameter"]["parameterName"]
-        max_tem = weatherElement[4]["time"][0]["parameter"]["parameterName"]
+        weather_status = weatherElement[1]["time"][0]["elementValue"][0]["value"]
+        rain_prob = weatherElement[0]["time"][0]["elementValue"][0]["value"]
+        min_tem = weatherElement[10]["time"][0]["elementValue"][0]["value"]
+        con = weatherElement[5]["time"][0]["elementValue"][1]["value"]
+        max_tem = weatherElement[3]["time"][0]["elementValue"][0]["value"]
 
         # weather_data = [location, start_time, end_time, weather_status, rain_prob, min_tem, con, max_tem]
         # for i in weather_data:
@@ -57,13 +64,17 @@ def line_notify(data):
         if int(data[7]) >= 33:
             message += "\n超熱，會熱死！"
         if int(data[5]) <= 10:
-            message += "\n要凍僵了..."
-        elif int(data[5]) <= 14:
             message += "\n超冷，出門要包的跟木乃伊一樣！！！"
+        elif int(data[5]) <= 14:
+            message += "\n蠻冷的，多穿點"
         elif int(data[5]) <= 19:
             message += "\n涼涼的，加件外套吧！"
+        if int(data[7]) - int(data[5]) >= 9:
+            message += "\n溫差大，別冷到"
         if int(data[4]) >= 70:
             message += "\n會下雨，記得帶傘！"
+        elif int(data[4]) >= 50:
+            message += "\n看你要不要帶傘"
 
     # line notidy 所需資料
     url = "https://notify-api.line.me/api/notify"
@@ -78,6 +89,6 @@ def line_notify(data):
     requests.post(url, headers=line_headers, data=line_data)
 
 if __name__ == "__main__":
-    #line_notify(tuple(["臺北市", "2023-11-19 00:00:00", "2023-11-19 06:00:00", "晴時多雲", 60, 15, "寒冷", 33]))
+    #line_notify(tuple(["臺北市", "2023-11-19 00:00:00", "2023-11-19 06:00:00", "晴時多雲", 20, 10, "寒冷", 17]))
     get_data()
     
