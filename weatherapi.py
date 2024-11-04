@@ -1,19 +1,22 @@
 import requests
 import json
 
+from settings import AUTHORICATION, ONE_TOKEN, GROUP_TOKEN
+
+
 def get_data():
 
     # 中央氣象局台 api
     # url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
     # parameters = {
-    #     "Authorization" : "CWA-DC885251-6E8F-4B11-A21F-1F485D99EA13",
+    #     "Authorization" : AUTHORICATION,
     #     "locationName" : "臺北市"
     # }
 
     # 中央氣象局台北市 api
     url = "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-061"
     parameters = {
-        "Authorization" : "CWA-DC885251-6E8F-4B11-A21F-1F485D99EA13",
+        "Authorization" : AUTHORICATION,
         "locationName" : "內湖區"
     }
 
@@ -49,8 +52,8 @@ def get_data():
 
 def line_notify(data):
 
-    #token = "UpN6oUxoHi8fOqmIAewqWtORIT8BWAYGtDtMUPnfABc" #1 on 1
-    token = "Aeij5pKP8BGYkDIjwmhLxTVXocZlQ1Y2y8K0oh0c2X0" # group with mental
+    #token = ONE_TOKEN #1 on 1
+    token = GROUP_TOKEN # group with mental
     message = ""
 
     if len(data) == 0:
